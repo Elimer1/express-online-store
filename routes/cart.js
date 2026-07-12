@@ -11,9 +11,9 @@ router.get("/", (req, res) => {
   return res.status(400).json({ success: false, error: "missing customer id" });
 });
 
-router.get("/:customerId", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const customerId = req.params.customerId;
+    const customerId = req.query;
     const fileData = await fs.readFile(`${dbBasePath}/customers.json`);
     const customers = JSON.parse(fileData);
     const customer = customers.find((customer) => customer.id === customerId);
@@ -90,7 +90,11 @@ router.post("/items", async (req, res) => {
     let customer = customers.find((customer) => customer.id === customerId);
 
     if (!customer) {
-      customer = { id: customerId, cart: [] };
+      customer = {
+        id: customerId,
+        cart: [],
+        balance: Number(process.env.STARTING_BALANCE),
+      };
       customers.push(customer);
     }
 

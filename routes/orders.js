@@ -117,3 +117,28 @@ router.post("/checkout", async (req, res) => {
       .json({ success: false, error: "internal server error" });
   }
 });
+
+router.get("/orders", async (req, res) => {
+  try {
+    const customerId = req.query.customerId;
+
+    if (!customerId) {
+      return res
+        .status(400)
+        .json({ success: false, error: "missing customer id" });
+    }
+
+    const orderData = await fs.readFile(`${dbBasePath}/orders.json`, "utf8");
+    const orders = JSON.parse(orderData);
+    const customerOrders = orders.filter(
+      (order) => order.customerId === customerId,
+    );
+
+    return res.status(200).json({ success: true, data: customerOrders });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, error: "internal server error" });
+  }
+});

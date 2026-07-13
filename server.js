@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import fs from "fs/promises";
 import cartRoutes from "./routes/cart.js";
 import productRoutes from "./routes/products.js";
+import balanceRoutes from "./routes/balance.js";
 
 const server = express();
 dotenv.config();
@@ -25,6 +26,8 @@ server.get("/health", (req, res) => {
 server.use("/products", productRoutes);
 
 server.use("/cart", cartRoutes);
+
+server.use("/balance", balanceRoutes);
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
